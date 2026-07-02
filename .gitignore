@@ -1,5 +1,28 @@
+# Build output
 bin/
 obj/
-*.user
+
+# IDE
 .vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Runtime data (user config — not for version control)
 launchers.json
+
+# Credentials & secrets
+.env
+.env.*
+*.env
+appsettings.secrets.json
+secrets.json
+*secret*
+*credential*
+*password*
+*.pfx
+*.p12
+*.key
+*.pem
