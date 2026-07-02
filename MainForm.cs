@@ -42,6 +42,10 @@ public class MainForm : Form
         Font          = new Font("Segoe UI", 10);
         StartPosition = FormStartPosition.CenterScreen;
 
+        using var stream = typeof(MainForm).Assembly
+            .GetManifestResourceStream("NetRouteManager.app.ico");
+        if (stream is not null) Icon = new Icon(stream);
+
         BuildUI();
         RefreshAppList();
 
