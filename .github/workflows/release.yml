@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish self-contained single-file
+        run: |
+          dotnet publish -c Release -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -o publish/
+
+      - name: Create zip
+        run: |
+          Compress-Archive -Path publish\NetRouteManager.exe `
+            -DestinationPath "NetRouteManager-${{ github.ref_name }}-win-x64.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "NetRoute Manager ${{ github.ref_name }}"
+          files: NetRouteManager-${{ github.ref_name }}-win-x64.zip
+          body: |
+            ## NetRoute Manager ${{ github.ref_name }}
+
+            Bind aplikasi Windows ke network adapter pilihan secara otomatis.
+
+            ### Cara Install
+            1. Download file `.zip` di bawah
+            2. Extract `NetRouteManager.exe` ke folder mana saja
+            3. Klik kanan → **Run as administrator**
+
+            ### Kebutuhan Sistem
+            - Windows 10 / 11 (64-bit)
+            - Hak administrator (otomatis diminta saat pertama jalan)
+            - Tidak perlu install .NET runtime — sudah termasuk dalam exe
